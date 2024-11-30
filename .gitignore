@@ -4,3 +4,4 @@ pyproject.toml
 /dist
 /dist
 pyproject.toml
+*.toml
