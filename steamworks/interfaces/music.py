@@ -1,10 +1,10 @@
 from ctypes import *
 from enum import Enum
 
-import steamworks.util 		as util
-from steamworks.enums 		import *
-from steamworks.structs 	import *
-from steamworks.exceptions 	import *
+import steamworks.steamworks.util 		as util
+from steamworks.steamworks.enums 		import *
+from steamworks.steamworks.structs 	import *
+from steamworks.steamworks.exceptions 	import *
 
 
 class SteamMusic(object):

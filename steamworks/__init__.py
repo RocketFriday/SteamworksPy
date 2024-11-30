@@ -14,25 +14,24 @@ import sys, os, time
 from ctypes import *
 from enum import Enum
 
-import steamworks.util 		as steamworks_util
-from steamworks.enums 		import *
-from steamworks.structs 	import *
-from steamworks.exceptions 	import *
-from steamworks.methods 	import STEAMWORKS_METHODS
+import steamworks
+import steamworks.steamworks.util 		as steamworks_util
+from steamworks.steamworks.enums 		import *
+from steamworks.steamworks.structs 	import *
+from steamworks.steamworks.exceptions 	import *
+from steamworks.steamworks.methods 	import STEAMWORKS_METHODS
 
-from steamworks.interfaces.apps         import SteamApps
-from steamworks.interfaces.friends      import SteamFriends
-from steamworks.interfaces.matchmaking  import SteamMatchmaking
-from steamworks.interfaces.music        import SteamMusic
-from steamworks.interfaces.screenshots  import SteamScreenshots
-from steamworks.interfaces.users        import SteamUsers
-from steamworks.interfaces.userstats    import SteamUserStats
-from steamworks.interfaces.utils        import SteamUtils
-from steamworks.interfaces.workshop     import SteamWorkshop
-from steamworks.interfaces.microtxn     import SteamMicroTxn
-from steamworks.interfaces.input        import SteamInput
+from steamworks.steamworks.interfaces.apps         import SteamApps
+from steamworks.steamworks.interfaces.friends      import SteamFriends
+from steamworks.steamworks.interfaces.matchmaking  import SteamMatchmaking
+from steamworks.steamworks.interfaces.music        import SteamMusic
+from steamworks.steamworks.interfaces.screenshots  import SteamScreenshots
+from steamworks.steamworks.interfaces.users        import SteamUsers
+from steamworks.steamworks.interfaces.userstats    import SteamUserStats
+from steamworks.steamworks.interfaces.utils        import SteamUtils
+from steamworks.steamworks.interfaces.workshop     import SteamWorkshop
 
-os.environ['LD_LIBRARY_PATH'] = os.getcwd()
+# os.environ['LD_LIBRARY_PATH'] = os.getcwd()
 
 
 class STEAMWORKS(object):
@@ -67,12 +66,6 @@ class STEAMWORKS(object):
         library_file_name = ''
         if platform in ['linux', 'linux2']:
             library_file_name = 'SteamworksPy.so'
-            if os.path.isfile(os.path.join(os.getcwd(), 'libsteam_api.so')):
-                cdll.LoadLibrary(os.path.join(os.getcwd(), 'libsteam_api.so')) #if i do this then linux works
-            elif os.path.isfile(os.path.join(os.path.dirname(__file__), 'libsteam_api.so')):
-                cdll.LoadLibrary(os.path.join(os.path.dirname(__file__), 'libsteam_api.so'))
-            else:
-                raise MissingSteamworksLibraryException(f'Missing library "libsteam_api.so"')
 
         elif platform == 'darwin':
             library_file_name = 'SteamworksPy.dylib'
@@ -84,12 +77,9 @@ class STEAMWORKS(object):
             # This case is theoretically unreachable
             raise UnsupportedPlatformException(f'"{platform}" is not being supported')
 
-        if os.path.isfile(os.path.join(os.getcwd(), library_file_name)):
-            library_path = os.path.join(os.getcwd(), library_file_name)
-        elif os.path.isfile(os.path.join(os.path.dirname(__file__), library_file_name)):
-            library_path = os.path.join(os.path.dirname(__file__), library_file_name)
-        else:
-            raise MissingSteamworksLibraryException(f'Missing library {library_file_name}')
+        library_path = os.path.join(steamworks.__path__[0], library_file_name)
+        if not os.path.isfile(library_path):
+            raise MissingSteamworksLibraryException(f'Missing library at {library_path}')
 
         app_id_file = os.path.join(os.getcwd(), 'steam_appid.txt')
         if not os.path.isfile(app_id_file):
@@ -141,8 +131,6 @@ class STEAMWORKS(object):
         self.UserStats      = SteamUserStats(self)
         self.Utils          = SteamUtils(self)
         self.Workshop       = SteamWorkshop(self)
-        self.MicroTxn       = SteamMicroTxn(self)
-        self.Input          = SteamInput(self)
 
 
     def initialize(self) -> bool:

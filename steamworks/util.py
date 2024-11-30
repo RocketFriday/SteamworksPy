@@ -1,6 +1,6 @@
 import sys, os
 
-from steamworks.enums import Arch
+from steamworks.steamworks.enums import Arch
 
 
 def get_arch():

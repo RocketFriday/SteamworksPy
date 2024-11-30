@@ -20,8 +20,7 @@ class CreateItemResult_t(Structure):
 class SubmitItemUpdateResult_t(Structure):
     _fields_ = [
         ("result", c_int),
-        ("userNeedsToAcceptWorkshopLegalAgreement", c_bool),
-        ("publishedFileId", c_uint64)
+        ("userNeedsToAcceptWorkshopLegalAgreement", c_bool)
     ]
 
 
@@ -32,15 +31,15 @@ class ItemInstalled_t(Structure):
     ]
 
 
-class SubscriptionResult(Structure):
+class RemoteStorageSubscribePublishedFileResult_t(Structure):
     _fields_ = [
-        ("result", c_int32),
+        ("result", c_int),
         ("publishedFileId", c_uint64)
     ]
 
-class MicroTxnAuthorizationResponse_t(Structure):
+
+class RemoteStorageUnsubscribePublishedFileResult_t(Structure):
     _fields_ = [
-        ("appId", c_uint32),
-        ("orderId", c_uint64),
-        ("authorized", c_bool)
+        ("result", c_int),
+        ("publishedFileId", c_uint64)
     ]
